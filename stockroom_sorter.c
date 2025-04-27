@@ -74,9 +74,7 @@ void add_sneaker(Sneaker *list, int *count) {
         s->color_num = -1;
     }
 
-    // For now: manually assign room (later we can automate this)
-    printf("Enter Room Number (1=Running/Retro Tech, 2=Men's Basketball/Women's, 3=Kids): ");
-    scanf("%d", &s->room_number);
+    s->room_number = assign_room(s);
 
     (*count)++;
 }
@@ -164,12 +162,11 @@ void export_list(const Sneaker *list, int count, const char *filename) {
         return;
     }
 
-    fprintf(fp, "Sorted Sneaker Inventory\n");
-    fprintf(fp, "=========================\n\n");
+    // Write CSV header
+    fprintf(fp, "Brand,Model,Style Code,Room Number\n");
 
     for (int i = 0; i < count; i++) {
-        fprintf(fp, "%d. %s | %s | %s | Room %d\n",
-            i+1,
+        fprintf(fp, "\"%s\",\"%s\",\"%s\",%d\n",
             list[i].brand,
             list[i].model,
             list[i].style_code,
@@ -178,5 +175,26 @@ void export_list(const Sneaker *list, int count, const char *filename) {
     }
 
     fclose(fp);
-    printf("List successfully exported to %s\n", filename);
+    printf("List successfully exported to %s (Excel-ready CSV)\n", filename);
+}
+
+int assign_room(const Sneaker *s) {
+    // Make all lowercase copy for easier matching
+    char brand_lower[50], model_lower[50];
+    strcpy(brand_lower, s->brand);
+    strcpy(model_lower, s->model);
+    
+    for (char *p = brand_lower; *p; ++p) *p = tolower(*p);
+    for (char *p = model_lower; *p; ++p) *p = tolower(*p);
+
+    if (strstr(model_lower, "9060") || strstr(model_lower, "runner") || strstr(model_lower, "ultraboost")) {
+        return 1; // Running/Retro Tech
+    }
+    if (strstr(brand_lower, "jordan") || strstr(model_lower, "dunk") || strstr(model_lower, "lebron")) {
+        return 2; // Men's Basketball/Women's
+    }
+    if (strstr(model_lower, "kids") || strstr(model_lower, "gs") || strstr(model_lower, "ps")) {
+        return 3; // Kids
+    }
+    return 2; // Default: Adult Basketball/Women's
 }

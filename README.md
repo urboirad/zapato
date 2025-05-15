@@ -2,8 +2,8 @@
 
 **Version:** v1.0.0 
 
-A lightweight, fast, and stylish inventory tool built for sneaker stockrooms.  
-Add, edit, delete, and sort your sneaker inventory — then export it as a clean CSV.  
+A lightweight and fast inventory tool built for sneaker stockrooms.  
+Add, edit, delete, and sort your sneaker inventory — then export it as a CSV.  
 Built with ❤️ using C and GTK.
 
 ---
